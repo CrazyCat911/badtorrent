@@ -8,6 +8,8 @@ TOKEN_STR_SPLIT: int = ord(":")
 TOKEN_END: int = ord("e")
 
 def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
+    """Decode bencoded data"""
+
     def decodeNext(index: int) -> tuple[int | bytes | list[Any] | dict[bytes, Any], int]:
         if encoded[index] == TOKEN_INT:
             return decodeInt(index)
@@ -102,6 +104,8 @@ def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
     return result
 
 def encode(original: int | bytes | list[Any] | dict[bytes, Any]) -> bytes:
+    """Encode data into bencode"""
+
     if isinstance(original, bytes):
         return str(len(original)).encode() + bytes([TOKEN_STR_SPLIT]) + original
     elif isinstance(original, int):

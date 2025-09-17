@@ -115,3 +115,11 @@ def encode(original: int | bytes | list[Any] | dict[bytes, Any]) -> bytes:
             bytes([TOKEN_END])
     else:
         raise TypeError("Wrong input type")
+
+# Example usage
+if __name__ == "__main__":
+    bencode: bytes = b'd3:bar4:spam3:fooi42e4:listl3:one3:two5:threeee'
+    print(decode(bencode)) # -> {b'bar': b'spam', b'foo': 42, b'list': [b'one', b'two', b'three']}
+
+    to_encode: dict[bytes, Any] = {b"spam": b"eggs", b"names": [b"Alan", b"Bob", b"Joe"], b"magic number": 42}
+    print(encode(to_encode)) # -> b'd12:magic numberi42e5:namesl4:Alan3:Bob3:Joee4:spam4:eggse'

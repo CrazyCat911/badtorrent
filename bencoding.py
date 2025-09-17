@@ -1,13 +1,13 @@
 from typing import Any
 from string import digits
 
-def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
-    TOKEN_INT: int = ord(b"i")
-    TOKEN_LIST: int = ord(b"l")
-    TOKEN_DICT: int = ord(b"d")
-    TOKEN_STR_SPLIT: int = ord(b":")
-    TOKEN_END: int = ord(b"e")
+TOKEN_INT: int = ord(b"i")
+TOKEN_LIST: int = ord(b"l")
+TOKEN_DICT: int = ord(b"d")
+TOKEN_STR_SPLIT: int = ord(b":")
+TOKEN_END: int = ord(b"e")
 
+def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
     def decodeNext(index: int) -> tuple[int | bytes | list[Any] | dict[bytes, Any], int]:
         if encoded[index] == TOKEN_INT:
             return decodeInt(index)
@@ -74,6 +74,9 @@ def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
             to_add, current_index = decodeNext(current_index)
             output.append(to_add)
 
+            if current_index >= len(encoded):
+                raise ValueError(f"Missing end token {TOKEN_END}")
+
         return output, current_index + 1
 
     def decodeDict(index: int) -> tuple[dict[bytes, Any], int]:
@@ -83,6 +86,10 @@ def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
         while encoded[current_index] != TOKEN_END:
             key, current_index = decodeStr(current_index)
             value, current_index = decodeNext(current_index)
+
+            if current_index >= len(encoded):
+                raise ValueError(f"Missing end token {TOKEN_END}")
+
             output[key] = value
 
         return output, current_index + 1

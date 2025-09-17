@@ -93,3 +93,18 @@ def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
         raise ValueError("Trailing data after valid bencode")
 
     return result
+
+def encode(original: int | bytes | list[Any] | dict[bytes, Any]) -> bytes:
+    if isinstance(original, bytes):
+        return str(len(original)).encode() + bytes([TOKEN_STR_SPLIT]) + original
+    elif isinstance(original, int):
+        return bytes([TOKEN_INT]) + str(original).encode() + bytes([TOKEN_END])
+    elif isinstance(original, list):
+        return bytes([TOKEN_LIST]) + ''.join(encode(obj).decode() for obj in original).encode() + bytes([TOKEN_END])
+    elif isinstance(original, dict):
+        return \
+            bytes([TOKEN_DICT]) + \
+            ''.join(encode(key).decode() + encode(value).decode() for key, value in sorted(original.items(), key=lambda x: x[0])).encode() + \
+            bytes([TOKEN_END])
+    else:
+        raise TypeError("Wrong input type")

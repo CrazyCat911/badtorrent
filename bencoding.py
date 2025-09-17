@@ -1,11 +1,11 @@
 from typing import Any
 from string import digits
 
-TOKEN_INT: int = ord(b"i")
-TOKEN_LIST: int = ord(b"l")
-TOKEN_DICT: int = ord(b"d")
-TOKEN_STR_SPLIT: int = ord(b":")
-TOKEN_END: int = ord(b"e")
+TOKEN_INT: int = ord("i")
+TOKEN_LIST: int = ord("l")
+TOKEN_DICT: int = ord("d")
+TOKEN_STR_SPLIT: int = ord(":")
+TOKEN_END: int = ord("e")
 
 def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
     def decodeNext(index: int) -> tuple[int | bytes | list[Any] | dict[bytes, Any], int]:
@@ -80,7 +80,7 @@ def decode(encoded: bytes) -> int | bytes | list[Any] | dict[bytes, Any]:
         return output, current_index + 1
 
     def decodeDict(index: int) -> tuple[dict[bytes, Any], int]:
-        output: dict[Any, Any] = {}
+        output: dict[bytes, Any] = {}
         current_index = index + 1
 
         while encoded[current_index] != TOKEN_END:

@@ -107,11 +107,11 @@ def encode(original: int | bytes | list[Any] | dict[bytes, Any]) -> bytes:
     elif isinstance(original, int):
         return bytes([TOKEN_INT]) + str(original).encode() + bytes([TOKEN_END])
     elif isinstance(original, list):
-        return bytes([TOKEN_LIST]) + ''.join(encode(obj).decode() for obj in original).encode() + bytes([TOKEN_END])
+        return bytes([TOKEN_LIST]) + b''.join(encode(obj) for obj in original) + bytes([TOKEN_END])
     elif isinstance(original, dict):
         return \
             bytes([TOKEN_DICT]) + \
-            ''.join(encode(key).decode() + encode(value).decode() for key, value in sorted(original.items(), key=lambda x: x[0])).encode() + \
+            b''.join(encode(key) + encode(value) for key, value in sorted(original.items(), key=lambda x: x[0])) + \
             bytes([TOKEN_END])
     else:
         raise TypeError("Wrong input type")
